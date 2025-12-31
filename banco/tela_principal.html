@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWave Space & Environment</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:#050b16;
+  color:#fff;
+}
+
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:22px 40px;
+  background:rgba(5,11,22,.75);
+  backdrop-filter:blur(10px);
+}
+
+.header strong{
+  font-size:20px;
+}
+
+
+.hero{
+  padding:90px 20px;
+  text-align:center;
+  background:
+    linear-gradient(to bottom,rgba(0,0,0,.6),#050b16),
+    url("https://images-assets.nasa.gov/image/PIA12235/PIA12235~orig.jpg")
+    center/cover;
+}
+
+.hero h1{
+  font-size:42px;
+  margin-bottom:15px;
+}
+
+.hero p{
+  max-width:760px;
+  margin:auto;
+  font-size:18px;
+  opacity:.9;
+}
+
+
+.section{
+  max-width:1200px;
+  margin:70px auto;
+  padding:0 20px;
+}
+
+.section h2{
+  font-size:28px;
+  margin-bottom:30px;
+  border-left:6px solid #2ecc71;
+  padding-left:14px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:28px;
+}
+
+.card{
+  background:rgba(255,255,255,.07);
+  border-radius:18px;
+  overflow:hidden;
+  transition:.35s;
+}
+
+.card:hover{
+  transform:translateY(-10px);
+}
+
+.card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:20px;
+}
+
+.card-content h4{
+  margin-bottom:10px;
+}
+
+.card-content p{
+  font-size:15px;
+  opacity:.85;
+}
+
+
+footer{
+  text-align:center;
+  padding:30px;
+  background:#030810;
+  opacity:.85;
+}
+</style>
+</head>
+
+<body>
+
+<script>
+if (!sessionStorage.getItem("logado")) {
+  location.href = "index.html";
+}
+</script>
+
+<header class="header">
+  <strong>EcoWave • Space & Environment</strong>
+  <div>
+    <span id="user"></span>
+    <a href="perfil.html" style="color:#2ecc71;margin-left:15px">Perfil</a>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Monitoramento ambiental além da Terra</h1>
+  <p>
+    A EcoWave integra dados ambientais e espaciais para
+    compreender impactos climáticos, satélites, observação
+    da Terra e sustentabilidade global.
+  </p>
+</section>
+
+<section class="section">
+  <h2>Inteligência ambiental & espacial</h2>
+  <div class="cards" id="cards"></div>
+</section>
+
+<footer>
+  © 2025 EcoWave Solutions • Space, Climate & Sustainability
+</footer>
+
+<script>
+user.innerText = sessionStorage.getItem("usuario");
+
+
+fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=6")
+.then(r => r.json())
+.then(data => {
+  data.forEach(n => {
+    if (n.media_type !== "image") return;
+
+    cards.innerHTML += `
+      <div class="card">
+        <img src="${n.url}">
+        <div class="card-content">
+          <h4>${n.title}</h4>
+          <p>${n.explanation.substring(0,140)}...</p>
+        </div>
+      </div>
+    `;
+  });
+});
+
+
+fetch("https://images-api.nasa.gov/search?q=planet+environment&media_type=image")
+.then(r => r.json())
+.then(d => {
+  d.collection.items.slice(0,3).forEach(n => {
+    const imgUrl = n.links?.[0]?.href || "https://via.placeholder.com/400x200?text=NASA";
+    const title = n.data?.[0]?.title || "NASA Image";
+    const desc = n.data?.[0]?.description || "Imagem de planeta ou meio ambiente fora da Terra";
+
+    cards.innerHTML += `
+      <div class="card">
+        <img src="${imgUrl}">
+        <div class="card-content">
+          <h4>${title}</h4>
+          <p>${desc.substring(0,140)}...</p>
+        </div>
+      </div>
+    `;
+  });
+});
+</script>
+
+
+
+
+
+</body>
+</html>
